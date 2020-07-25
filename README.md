@@ -5,5 +5,5 @@ Thanks a lot to DayDun for reverse engeneering the file format and jrnvnjk for h
 ## current progress
 - [x] export vertices
 - [x] export faces
-- [ ] export colors
-- [ ] export uvs
+- [ ] export colors | only have vertex colors, not possible in obj |
+- [x] export uvs
