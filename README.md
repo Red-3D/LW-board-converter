@@ -1,4 +1,4 @@
-# LW board to obj
+# LogicWorld board to obj
 A simple commandline tool for converting Logic World boards to obj  
 Thanks a lot to DayDun for reverse engeneering the file format and jrnvnjk for helping me debug some issues
 
