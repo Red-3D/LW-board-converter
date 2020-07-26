@@ -5,30 +5,9 @@
 #include <algorithm>
 
 using namespace std;
-/*
-tungmodel {
-  int modelCount
-  model models[modelCount]
-  vec3 float pos1 // have to figure out what this is
-  vec3 float pos2 // have to figure out what this is
-}
-
-model {
-  char id
-  int vertexCount
-  vec3 float vertices[vertexCount]
-  int indexCount
-  int indices[indexCount]
-  int colorCount
-  vec4 |color| colors[colorCount]
-  int uvCount
-  vec2 float uvs[uvCount]
-}
-
-grid texture epsilon = 0.5-(2*(0.5/16)) / 0.4375
-*/
 
 struct vertexinfo{
+    //chars have extra padding, removed by pack
     #pragma pack(1)
     char id;
     #pragma pack(pop)
@@ -49,6 +28,7 @@ int export_file(int export_method, string path, int model_id, int vertexCount, v
     
     //prepare to open the export file
     ofstream file_out;
+    //find the path itself
     int actual_file = 0;
     for (int i = 0; i < path.length(); i++) if (path[i] == 47) actual_file = i;
     path.erase(actual_file + 1);
@@ -59,7 +39,7 @@ int export_file(int export_method, string path, int model_id, int vertexCount, v
         cout << " Exporting as Obj\n";
         //open the file and print ad [dab]
         file_out.open((path + "model" + to_string(model_id + 1) + ".obj").c_str());
-        file_out << "# LogicWorld board converter | https://github.com/Red-3D/LW-board-to-obj |\n\n";
+        file_out << "# LogicWorld board converter | https://github.com/Red-3D/LW-board-converter |\n\n";
 
         //if the model number is 0 the mesh is named boards and assign the grid material, else the mesh will be named components
         if (model_id == 0) {
@@ -101,10 +81,74 @@ int export_file(int export_method, string path, int model_id, int vertexCount, v
         //close file duh
         file_out.close();
         return 1;
+    case 1:
+        cout << " Exporting as Ply\n";
+        //open the file and print ad [dab], also some other stuff the file needs
+        file_out.open((path + "model" + to_string(model_id + 1) + ".ply").c_str());
+        file_out << "ply\nformat ascii 1.0\n";
+        file_out << "comment LogicWorld board converter | https://github.com/Red-3D/LW-board-converter |\n";
+        file_out << "element vertex " << vertexCount << "\n";
+        file_out << "property float x\nproperty float y\nproperty float z\n";
+        //if the model id is 0 the uv properties get added
+        if (model_id == 0)file_out << "property float s\nproperty float t\n";
+        file_out << "property uchar red\nproperty uchar green\nproperty uchar blue\nproperty uchar alpha\n";
+        file_out << "element face " << indexCount / 3 << "\n";
+        file_out << "property list uchar uint vertex_indices\nend_header\n";
+        
+        //vertex loop
+        for (int i = 0; i < vertexCount; i++) {
+            //vertex positions
+            for (int j = 0; j < 3; j++) {
+                file_out << vertices[(3 * i) + j] << " ";
+            }
+            //uvs
+            if (model_id == 0) {
+                file_out << uvs[i * 2] << " " << uvs[i * 2 + 1] << " ";
+            }
+
+            //vertex colors
+            for (int j = 0; j < 4; j++) {
+                switch (j) {
+                case 0:
+                    //red
+                    file_out << colors[i].r << " ";
+                    break;
+                case 1:
+                    //green
+                    file_out << colors[i].g << " ";
+                    break;
+                case 2:
+                    //blue
+                    file_out << colors[i].b << " ";
+                    break;
+                case 3:
+                    //alpha should always be 255
+                    file_out << 255 << " ";
+                    break;
+                }
+            }
+            file_out << "\n";
+        }
+
+        //face loop
+        for (int i = 0; i < indexCount / 3; i++) {
+            //vertex count of faces = 3
+            file_out << 3 << " ";
+            for (int j = 0; j < 3; j++) {
+                file_out << faces[(3 * i) + j] << " ";
+            }
+            file_out << "\n";
+        }
+
+        //close the file duh
+        file_out.close();
+        return 1;
     default:
+        //unknown export method
         return 103;
     }
     
+    //just in case
     return 1;
 
 }
@@ -118,19 +162,21 @@ int convert_board(string path, int export_method) {
 
     //check if file is open
     if (!file) {
+        //unable to open file
         return 101;
     }
 
     //get modelCount (always = 2)
     int modelCount;
     file.read((char*)&modelCount, sizeof(int));
+    //if this is not 2 the user probably selected a wrong file
     if (modelCount != 2) return 102;
-    cout << "model count: " << modelCount << endl;
+    cout << "\nmodel count: " << modelCount << endl;
 
     //iterate though both models
     for (int i = 0; i < 2; i++) {
 
-        //get the Vertex Count
+        //get the Vertex info
         vertexinfo VertexInfo;
         file.read((char*)&VertexInfo, sizeof(vertexinfo));
         cout << " ID: " << VertexInfo.id + 0 << endl;
@@ -149,13 +195,13 @@ int convert_board(string path, int export_method) {
         int face;
         vector<int> faces;
         file.read((char*)&indexCount, sizeof(int));
-        cout << " faces: " << indexCount / 3 << endl;
+        cout << " faces: " << indexCount << endl;
         for (int n = 0; n < indexCount; n++) {
             file.read((char*)&face, sizeof(int));
             faces.push_back(face);
         }
 
-        //read amount of colors, idfk probably not imporatant but have to do
+        //read vertex colors
         int colorCount;
         color Color;
         vector<color> Colors;
@@ -166,7 +212,7 @@ int convert_board(string path, int export_method) {
             Colors.push_back(Color);
         }
 
-        //read the uvs
+        //read uvs
         int uvcount;
         float uv;
         vector<float> uvs;
@@ -177,11 +223,14 @@ int convert_board(string path, int export_method) {
             uvs.push_back(uv);
         }
 
+        //export the file
         int export_file_return_value = export_file(export_method, path, i, VertexInfo.vertexCount, verts, indexCount, faces, colorCount, Colors, uvcount, uvs);
+        //the return value of the exporter is passed on to main
         if(export_file_return_value != 1) return export_file_return_value;
         cout << "----------------------------\n";
     }
 
+    //close the file duh
     file.close();
 
     return 1;
@@ -190,13 +239,13 @@ int convert_board(string path, int export_method) {
 
 int main()
 {
-    //some variables
+    //user input
     string path;
     int return_code;
     int export_method;
 
     //get and format file path
-    cout << "\nLW board to model 0.2\n\nfile path: ";
+    cout << "\nLW board converter 1.0\n\nfile path: ";
     getline(cin, path);
     replace(path.begin(), path.end(), '\\', '/');
     path.erase(remove(path.begin(), path.end(), '"'), path.end());
@@ -233,6 +282,8 @@ int main()
         cout << "\n--------------------------------------------\n";
         break;
     }
+
+    system("pause");
 
     //everything is fine, even when it is not
     return 1;
