@@ -10,10 +10,10 @@ Thanks a lot to:
 - [X] ply exporter (does support vertex colors)
 
 ## Using the tool
-* download the latest release or build the source  
-* run the tool and input the file path of the model.tungmodel file
-* choose a export method and run the tool
-* import the converted files into your aplication of choise and set up the rest of the materials
+1. download the latest release or build the source  
+2. run the tool and input the file path of the model.tungmodel file
+3. choose a export method and run the tool
+4. import the converted files into your aplication of choise and set up the rest of the materials
 
 ## Usefull information
 * draging the file into cmd also works
