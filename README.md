@@ -4,5 +4,5 @@ Thanks a lot to DayDun for reverse engeneering the file format and jrnvnjk for h
 
 ## current features
 - [x] obj exporter (does not support vertex colors)
-- [ ] ply exporter (does support vertex colors)
+- [X] ply exporter (does support vertex colors)
 - [x] modular code
