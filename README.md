@@ -1,5 +1,5 @@
 # [LogicWorld](https://logicworld.net/) board converter
-A simple commandline tool for converting Logic World boards  
+A simple tool for converting Logic World boards  
 Thanks a lot to:
 * DayDun for reverse engineering the file format
 * jrnvnjk for helping me debug some issues
@@ -15,7 +15,7 @@ Thanks a lot to:
 3. choose a export method and run the tool
 4. import the converted files into your application of choice and set up the rest of the materials
 
-## Usefull information
+## Useful information
 * dragging the file into cmd also works
 * ply has vertex color support, it is objectively better
 * the tool could take a few seconds to minutes depending on the board and your cpu
