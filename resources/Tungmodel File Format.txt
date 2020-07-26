@@ -1,0 +1,25 @@
+tungmodel {
+  int modelCount
+  |model| models[modelCount]
+  vec3 float pos1 // not important
+  vec3 float pos2 // not important
+}
+
+model {
+  char id // needs to be packed
+  int vertexCount
+  vec3 float vertices[vertexCount]
+  int indexCount
+  int indices[indexCount]
+  int colorCount
+  vec4 |color| colors[colorCount]
+  int uvCount
+  vec2 float uvs[uvCount]
+}
+
+color {
+    int r : 8;
+    int g : 8;
+    int b : 8;
+    int a : 8;
+};
