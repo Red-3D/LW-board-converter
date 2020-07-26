@@ -18,5 +18,5 @@ Thanks a lot to:
 ## Useful information
 * dragging the file into cmd also works
 * ply has vertex color support, it is objectively better
-* the tool could take a few seconds to minutes depending on the board and your cpu
+* the tool could take a few seconds to minutes to export the board, it depends on the board and your cpu
 * the grid texture is a black and white mask
