@@ -10,8 +10,7 @@ Thanks a lot to DayDun for reverse engeneering the file format and jrnvnjk for h
 ## Using the tool
 * download the latest release or build the source  
 * run the tool and input the file path of the model.tungmodel file
-* choose a export method
-* let the tool run
+* choose a export method and run the tool
 * import the converted files into your aplication of choise and set up the rest of the materials
 
 ## Usefull information
