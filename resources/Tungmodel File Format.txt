@@ -12,14 +12,14 @@ model {
   int indexCount
   int indices[indexCount]
   int colorCount
-  vec4 |color| colors[colorCount]
+  vec4 unsigned int : 8 colors[colorCount] // 8bit / 1byte unsigned int (I used the color structure seen below)
   int uvCount
   vec2 float uvs[uvCount]
 }
 
 color {
-    int r : 8;
-    int g : 8;
-    int b : 8;
-    int a : 8;
+    unsigned int r : 8;
+    unsigned int g : 8;
+    unsigned int b : 8;
+    unsigned int a : 8;
 };
