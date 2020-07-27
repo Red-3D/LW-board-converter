@@ -5,6 +5,9 @@ Thanks a lot to:
 * jrnvnjk for helping me debug some issues
 * DanielGJ44 and the other LW beta testers for sharing board files
 
+### updates:
+* 1.1 fixed vertex colors
+
 ## Features
 - [x] obj exporter (does not support vertex colors)
 - [X] ply exporter (does support vertex colors)
