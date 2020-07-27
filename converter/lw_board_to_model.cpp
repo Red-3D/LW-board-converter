@@ -17,10 +17,10 @@ struct vertexinfo{
 //extract color information |RGBA one byte each| 
 struct color
 {
-    int r : 8;
-    int g : 8;
-    int b : 8;
-    int a : 8;
+    unsigned int r : 8;
+    unsigned int g : 8;
+    unsigned int b : 8;
+    unsigned int a : 8;
 };
 
 
@@ -122,8 +122,8 @@ int export_file(int export_method, string path, int model_id, int vertexCount, v
                     file_out << colors[i].b << " ";
                     break;
                 case 3:
-                    //alpha should always be 255
-                    file_out << 255 << " ";
+                    //alpha
+                    file_out << colors[i].a << " ";
                     break;
                 }
             }
